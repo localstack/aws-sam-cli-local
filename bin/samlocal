@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import boto3
+
+try:
+    from samcli.cli import main
+except Exception:
+    # fall back to setting up python path in dev mode
+    from glob import glob
+    parent = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
+    sys.path.append(parent)
+    venv_dir = glob(os.path.join(parent, '.venv', 'lib', 'python*', 'site-packages'))
+    if venv_dir:
+        sys.path.append(venv_dir[0])
+    from samcli.cli import main
+
+# define constants
+ENV_ACCESS_KEY = 'AWS_ACCESS_KEY_ID'
+ENV_SECRET_KEY = 'AWS_SECRET_ACCESS_KEY'
+
+# configuration values
+EDGE_PORT = os.environ.get('EDGE_PORT') or 4566
+LOCALSTACK_HOSTNAME = os.environ.get('LOCALSTACK_HOSTNAME') or 'localhost'
+LOCALSTACK_ENDPOINT = 'http://%s:%s' % (LOCALSTACK_HOSTNAME, EDGE_PORT)
+
+
+def boto3_client(*args, **kwargs):
+    kwargs['endpoint_url'] = kwargs.get('endpoint_url') or LOCALSTACK_ENDPOINT
+    return boto3_client_orig(*args, **kwargs)
+
+
+# apply patches
+boto3_client_orig = boto3.client
+boto3.client = boto3_client
+os.environ[ENV_ACCESS_KEY] = os.environ.get(ENV_ACCESS_KEY) or 'test'
+os.environ[ENV_SECRET_KEY] = os.environ.get(ENV_SECRET_KEY) or 'test'
+
+# start up main CLI procedure
+main.cli()
