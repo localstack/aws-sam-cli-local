@@ -26,14 +26,14 @@ LOCALSTACK_HOSTNAME = os.environ.get('LOCALSTACK_HOSTNAME') or 'localhost'
 LOCALSTACK_ENDPOINT = 'http://%s:%s' % (LOCALSTACK_HOSTNAME, EDGE_PORT)
 
 
-def boto3_client(*args, **kwargs):
+def boto3_Session_client(*args, **kwargs):
     kwargs['endpoint_url'] = kwargs.get('endpoint_url') or LOCALSTACK_ENDPOINT
-    return boto3_client_orig(*args, **kwargs)
+    return boto3_Session_client_orig(*args, **kwargs)
 
 
 # apply patches
-boto3_client_orig = boto3.client
-boto3.client = boto3_client
+boto3_Session_client_orig = boto3.Session.client
+boto3.Session.client = boto3_Session_client
 os.environ[ENV_ACCESS_KEY] = os.environ.get(ENV_ACCESS_KEY) or 'test'
 os.environ[ENV_SECRET_KEY] = os.environ.get(ENV_SECRET_KEY) or 'test'
 
