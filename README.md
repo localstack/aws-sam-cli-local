@@ -23,6 +23,12 @@ samlocal --help
 * `EDGE_PORT`: Port number under which the LocalStack edge service is available (default: `4566`)
 * `LOCALSTACK_HOSTNAME`: Host under which the LocalStack edge service is available (default: `localhost`)
 
+## Change Log
+
+* v1.53.1: Fix logic around local URLs for ECR image repositories
+* v1.1.0.1: Minor fix, release initial version of `samlocal` command
+* v1.1.0: Initial version
+
 ## License
 
 This software library is released under the Apache License, Version 2.0.

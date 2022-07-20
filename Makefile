@@ -15,9 +15,9 @@ install:           ## Install full dependencies in virtualenv
 
 publish:           ## Publish the library to the central PyPi repository
 	# build and upload archive
-	($(VENV_RUN) && python setup.py sdist upload)
+	($(VENV_RUN) && python setup.py sdist; $(PIP_CMD) install twine; twine upload dist/*.tar.gz)
 
 lint:              ## Run code linter to check code style
-	($(VENV_RUN); flake8 --inline-quotes=single --show-source --max-line-length=120 --ignore=E128,W504 --exclude=node_modules,$(VENV_DIR)*,dist,fixes . bin/samlocal)
+	($(VENV_RUN); flake8 --show-source --max-line-length=100 --ignore=E128,W504 --exclude=node_modules,$(VENV_DIR)*,dist,fixes . bin/samlocal)
 
 .PHONY: usage clean install publish lint

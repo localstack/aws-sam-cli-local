@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import re
 import sys
 import boto3
 
@@ -16,14 +17,19 @@ except Exception:
         sys.path.append(venv_dir[0])
     from samcli.cli import main
 
+from samcli.commands.deploy.guided_context import GuidedContext
+from samcli.lib.package import ecr_utils
+from samcli.cli import types
+
 # define constants
 ENV_ACCESS_KEY = 'AWS_ACCESS_KEY_ID'
 ENV_SECRET_KEY = 'AWS_SECRET_ACCESS_KEY'
+LOCALHOST_HOSTNAME = 'localhost.localstack.cloud'
 
 # configuration values
 EDGE_PORT = os.environ.get('EDGE_PORT') or 4566
 LOCALSTACK_HOSTNAME = os.environ.get('LOCALSTACK_HOSTNAME') or 'localhost'
-LOCALSTACK_ENDPOINT = 'http://%s:%s' % (LOCALSTACK_HOSTNAME, EDGE_PORT)
+LOCALSTACK_ENDPOINT = f'http://{LOCALSTACK_HOSTNAME}:{EDGE_PORT}'
 
 
 def boto3_client(*args, **kwargs):
@@ -36,6 +42,40 @@ boto3_client_orig = boto3.client
 boto3.client = boto3_client
 os.environ[ENV_ACCESS_KEY] = os.environ.get(ENV_ACCESS_KEY) or 'test'
 os.environ[ENV_SECRET_KEY] = os.environ.get(ENV_SECRET_KEY) or 'test'
+
+
+# apply SAM patches
+
+def prompt_image_repository(self, *args, **kwargs):
+    result = prompt_image_repository_orig(self, *args, **kwargs)
+    auth_api = result.get("AuthenticationAPI")
+    if not auth_api:
+        return result
+    host, _, repo_name = auth_api.partition("/")
+    parts = host.split(".")
+    if len(parts) <= 3:
+        return result
+    # "000000000000.dkr.ecr.eu-central-1.amazonaws.com"
+    ecr = boto3.client("ecr", region_name=parts[3])
+    repo = ecr.describe_repositories(repositoryNames=[repo_name])["repositories"][0]
+    repo_uri = re.sub(r"^localhost", LOCALHOST_HOSTNAME, repo["repositoryUri"])
+    result["AuthenticationAPI"] = repo_uri
+    return result
+
+
+prompt_image_repository_orig = GuidedContext.prompt_image_repository
+GuidedContext.prompt_image_repository = prompt_image_repository
+
+
+def is_ecr_url(url: str) -> bool:
+    result = is_ecr_url_orig(url)
+    ecr_url_regex = r"[a-zA-Z0-9_.:]+/[a-zA-Z0-9_/-]+"
+    return result or bool(re.match(ecr_url_regex, url or ''))
+
+
+is_ecr_url_orig = ecr_utils.is_ecr_url
+ecr_utils.is_ecr_url = is_ecr_url
+types.is_ecr_url = is_ecr_url
 
 # start up main CLI procedure
 main.cli()
