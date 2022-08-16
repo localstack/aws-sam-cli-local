@@ -17,6 +17,7 @@ except Exception:
         sys.path.append(venv_dir[0])
     from samcli.cli import main
 
+from samcli.lib.package.artifact_exporter import CloudFormationStackResource
 from samcli.commands.deploy.guided_context import GuidedContext
 from samcli.lib.package import ecr_utils
 from samcli.cli import types
@@ -76,6 +77,20 @@ def is_ecr_url(url: str) -> bool:
 is_ecr_url_orig = ecr_utils.is_ecr_url
 ecr_utils.is_ecr_url = is_ecr_url
 types.is_ecr_url = is_ecr_url
+
+
+# patch to address https://github.com/localstack/localstack/issues/4965
+def do_export(self, resource_id, resource_dict, parent_dir):
+    template_path: str = resource_dict.get(self.PROPERTY_NAME, None)
+    # bypass method completely, same as if it would detect it as an s3 URL
+    if "localhost" in template_path:
+        return
+
+    do_export_orig(self, resource_id, resource_dict, parent_dir)
+
+
+do_export_orig = CloudFormationStackResource.do_export
+CloudFormationStackResource.do_export = do_export
 
 # start up main CLI procedure
 main.cli()
