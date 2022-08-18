@@ -25,6 +25,7 @@ samlocal --help
 
 ## Change Log
 
+* v1.55.0: Fix s3 URl detection when using a nested template
 * v1.53.1: Fix logic around local URLs for ECR image repositories
 * v1.1.0.1: Minor fix, release initial version of `samlocal` command
 * v1.1.0: Initial version

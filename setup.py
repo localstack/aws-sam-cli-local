@@ -3,7 +3,7 @@
 import re
 from setuptools import find_packages, setup
 
-VERSION = '1.53.0'
+VERSION = '1.55.0'
 
 # parameter variables
 install_requires = []
