@@ -1,1 +1,3 @@
-python %~dp0\samlocal %*
+@echo off
+
+python "%~dp0\samlocal" %*

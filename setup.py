@@ -3,7 +3,7 @@
 import re
 from setuptools import find_packages, setup
 
-VERSION = '1.55.0'
+VERSION = '1.67.0'
 
 # parameter variables
 install_requires = []
@@ -38,6 +38,8 @@ if __name__ == '__main__':
             'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: 3.7',
             'Programming Language :: Python :: 3.8',
+            'Programming Language :: Python :: 3.9',
+            'Programming Language :: Python :: 3.10',
             'License :: OSI Approved :: Apache Software License',
             'Topic :: Software Development :: Testing',
         ]
