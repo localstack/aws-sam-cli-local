@@ -31,10 +31,12 @@ ENV_SECRET_KEY = 'AWS_SECRET_ACCESS_KEY'
 LOCALHOST_HOSTNAME = 'localhost.localstack.cloud'
 
 # configuration values
+USE_SSL = os.environ.get('USE_SSL', 'false')
+PROTOCOL = 'https' if USE_SSL == 'true' else 'http'
 EDGE_PORT = os.environ.get('EDGE_PORT') or 4566
 LOCALSTACK_HOSTNAME = os.environ.get('LOCALSTACK_HOSTNAME') or 'localhost'
 AWS_ENDPOINT_URL = os.environ.get("AWS_ENDPOINT_URL")
-LOCALSTACK_ENDPOINT = AWS_ENDPOINT_URL or f'http://{LOCALSTACK_HOSTNAME}:{EDGE_PORT}'
+LOCALSTACK_ENDPOINT = AWS_ENDPOINT_URL or f'${PROTOCOL}://{LOCALSTACK_HOSTNAME}:{EDGE_PORT}'
 
 
 def boto3_Session_client(*args, **kwargs):
