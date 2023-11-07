@@ -30,7 +30,8 @@ LOCALHOST_HOSTNAME = 'localhost.localstack.cloud'
 # configuration values
 EDGE_PORT = os.environ.get('EDGE_PORT') or 4566
 LOCALSTACK_HOSTNAME = os.environ.get('LOCALSTACK_HOSTNAME') or 'localhost'
-LOCALSTACK_ENDPOINT = f'http://{LOCALSTACK_HOSTNAME}:{EDGE_PORT}'
+AWS_ENDPOINT_URL = os.environ.get("AWS_ENDPOINT_URL")
+LOCALSTACK_ENDPOINT = AWS_ENDPOINT_URL or f'http://{LOCALSTACK_HOSTNAME}:{EDGE_PORT}'
 
 
 def boto3_Session_client(*args, **kwargs):

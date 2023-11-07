@@ -3,7 +3,7 @@
 import re
 from setuptools import find_packages, setup
 
-VERSION = '1.67.0'
+VERSION = '1.68.0'
 
 # parameter variables
 install_requires = []
