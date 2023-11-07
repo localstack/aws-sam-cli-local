@@ -25,6 +25,7 @@ samlocal --help
 
 ## Change Log
 
+* v1.68.0: Support `AWS_ENDPOINT_URL` for configuring the `boto3.client` endpoint
 * v1.67.0: Patch underlying `boto3.Session.client` instead of `boto3.client`
 * v1.55.0: Fix s3 URl detection when using a nested template
 * v1.53.1: Fix logic around local URLs for ECR image repositories
