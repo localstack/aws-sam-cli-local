@@ -20,8 +20,9 @@ samlocal --help
 
 ## Configuration
 
-* `EDGE_PORT`: Port number under which the LocalStack edge service is available (default: `4566`)
-* `LOCALSTACK_HOSTNAME`: Host under which the LocalStack edge service is available (default: `localhost`)
+* `AWS_ENDPOINT_URL`: URL at which the `boto3` client can reach LocalStack, e.g. `http://localhost.localstack.cloud:4566`
+* `EDGE_PORT`: **Deprecated** Port number under which the LocalStack edge service is available (default: `4566`)
+* `LOCALSTACK_HOSTNAME`: **Deprecated** Host under which the LocalStack edge service is available (default: `localhost`)
 
 ## Change Log
 
