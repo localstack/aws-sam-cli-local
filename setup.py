@@ -17,6 +17,10 @@ for line in re.split('\n', requirements):
         lib_stripped = line.split(' #')[0].strip()
         install_requires.append(lib_stripped)
 
+# get the long description from the README.md
+with open("README.md") as f:
+    long_description = f.read()
+
 
 if __name__ == '__main__':
 
@@ -24,6 +28,7 @@ if __name__ == '__main__':
         name='aws-sam-cli-local',
         version=VERSION,
         description='Simple wrapper around AWS SAM CLI for use with LocalStack',
+        long_description=long_description,
         author='LocalStack Team',
         author_email='info@localstack.cloud',
         url='https://github.com/localstack/aws-sam-cli-local',
