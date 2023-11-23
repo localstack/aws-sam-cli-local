@@ -1,0 +1,54 @@
+name: Smoke tests for AWS SAM CLI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+env:
+  SAM_CLI_TELEMETRY: "0"
+  AWS_ACCESS_KEY_ID: "test"
+  AWS_SECRET_ACCESS_KEY: "test"
+  AWS_DEFAULT_REGION: us-east-1
+  AWS_REGION: us-east-1
+  AWS_ENDPOINT_URL: http://localhost:4566
+  VENV_DIR: ".venv"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.11"
+    - name: Start LocalStack
+      uses: LocalStack/setup-localstack@v0.1.2
+      with:
+        image-tag: 'latest'
+        install-awslocal: 'true'
+    - name: Install the package
+      run: |
+        make setup-venv
+        $VENV_DIR/bin/python -m pip install -e .
+    - name: Set up the stack
+      run: |
+        cd sample && \
+          ../$VENV_DIR/bin/samlocal deploy --no-confirm-changeset
+    - name: Make a request into the endpoint
+      run: |
+        TEST_URL="$(aws cloudformation describe-stacks --stack-name sample |  jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "HelloWorldApi") | .OutputValue')" && \
+        echo "Making request against $TEST_URL" && \
+        RESULT="$(curl -v $TEST_URL)"
+        if [[ "$(echo "$RESULT" | jq .message -r)" != "hello world" ]]; then
+          echo "Invalid output $RESULT" >&2
+          exit 1
+        fi
+
