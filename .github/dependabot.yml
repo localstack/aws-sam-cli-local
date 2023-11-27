@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "simonrw"
+    labels:
+      - "area: dependencies"
+      - "semver: patch"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
