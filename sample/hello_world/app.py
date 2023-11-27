@@ -1,6 +1,10 @@
 import json
 
 
+# import a dependency to ensure that packaging works correctly
+import requests
+
+
 def lambda_handler(event, context):
     """Sample pure Lambda function
 
