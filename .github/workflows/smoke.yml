@@ -47,6 +47,10 @@ jobs:
       run: |
         make setup-venv
         $VENV_DIR/bin/python -m pip install -e .
+    - name: Build the sam project
+      run: |
+        cd sample && \
+          ../$VENV_DIR/bin/samlocal build --use-container
     - name: Set up the stack
       run: |
         cd sample && \
