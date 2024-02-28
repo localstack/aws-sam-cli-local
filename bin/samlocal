@@ -19,6 +19,7 @@ except Exception:
 
 from samcli.lib.package.artifact_exporter import CloudFormationStackResource
 from samcli.commands.deploy.guided_context import GuidedContext
+from samcli.lib.package.ecr_uploader import ECRUploader
 from samcli.lib.package import ecr_utils
 from samcli.cli import types
 
@@ -79,6 +80,20 @@ is_ecr_url_orig = ecr_utils.is_ecr_url
 ecr_utils.is_ecr_url = is_ecr_url
 types.is_ecr_url = is_ecr_url
 
+def upload(self, image, resource_name):
+    try:
+        ecr_endpoint = get_registry_url(self)
+        if "amazonaws.com" in self.ecr_repo_multi.get(resource_name):
+            self.ecr_repo_multi[resource_name] = self.ecr_repo_multi[resource_name].replace("amazonaws.com", ecr_endpoint)
+    except AttributeError:
+        pass
+    return upload_orig(self, image,resource_name)
+
+def get_registry_url(self):
+    return self.ecr_client.describe_repositories()["repositories"][0]["repositoryUri"].split("/",1)[0]
+
+upload_orig = ECRUploader.upload
+ECRUploader.upload = upload
 
 # patch to address https://github.com/localstack/localstack/issues/4965
 def do_export(self, resource_id, resource_dict, parent_dir):
