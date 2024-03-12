@@ -3,10 +3,13 @@
 import re
 from setuptools import find_packages, setup
 
-VERSION = '1.68.0'
+VERSION = '1.69.0'
 
 # parameter variables
 install_requires = []
+extras_requires = {
+    "dev": ["flake8"]
+}
 package_data = {}
 
 # determine requirements
@@ -36,6 +39,7 @@ if __name__ == '__main__':
         packages=find_packages(exclude=('tests', 'tests.*')),
         package_data=package_data,
         install_requires=install_requires,
+        extras_require=extras_requires,
         license='Apache License 2.0',
         zip_safe=False,
         classifiers=[
