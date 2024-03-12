@@ -11,7 +11,7 @@ setup-venv:
 
 install:           ## Install full dependencies in virtualenv
 	make setup-venv && \
-		(test ! -e requirements.txt || ($(VENV_RUN); $(PIP_CMD) -q install -r requirements.txt)) || exit 1
+		(test ! -e requirements.txt || ($(VENV_RUN); $(PIP_CMD) install -e .[dev])) || exit 1
 
 publish:           ## Publish the library to the central PyPi repository
 	# build and upload archive
