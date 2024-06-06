@@ -74,7 +74,7 @@ GuidedContext.prompt_image_repository = prompt_image_repository
 
 def is_ecr_url(url: str) -> bool:
     result = is_ecr_url_orig(url)
-    ecr_url_regex = r"[a-zA-Z0-9_.:]+/[a-zA-Z0-9_/-]+"
+    ecr_url_regex = r"[a-zA-Z0-9_.:-]+/[a-zA-Z0-9_/-]+"
     return result or bool(re.match(ecr_url_regex, url or ''))
 
 
