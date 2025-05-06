@@ -92,7 +92,7 @@ def upload(self, image, resource_name):
         ecr_endpoint = get_registry_url(self)
         ecr_repo = self.ecr_repo_multi.get(resource_name)
         if ecr_repo and "amazonaws.com" in ecr_repo:
-            self.ecr_repo_multi[resource_name] = ecr_repo.replace("amazonaws.com", ecr_endpoint)
+            self.ecr_repo_multi[resource_name] = f'{ecr_endpoint}/{ecr_repo.split("/",1)[1]}'
     except (AttributeError, TypeError):
         pass
     return upload_orig(self, image, resource_name)
