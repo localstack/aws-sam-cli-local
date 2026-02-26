@@ -26,6 +26,7 @@ samlocal --help
 
 ## Change Log
 
+* v1.70.1: Fix ECR repository rewrite logic
 * v1.70.0: Fix regex pattern to detect ECR URLs with dashes
 * v1.69.0: Fix repo related cli options and add support to Lambdas with `Image` type
 * v1.68.0: Support `AWS_ENDPOINT_URL` for configuring the `boto3.client` endpoint
