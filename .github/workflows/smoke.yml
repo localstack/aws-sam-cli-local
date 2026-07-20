@@ -33,13 +33,13 @@ jobs:
     timeout-minutes: 5
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Set up Python 3.11
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: "3.11"
     - name: Start LocalStack
-      uses: LocalStack/setup-localstack@v0.2.5
+      uses: LocalStack/setup-localstack@v0.3.2
       env:
         LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
     - name: Install the package
