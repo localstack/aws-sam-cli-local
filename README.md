@@ -1,5 +1,13 @@
 # AWS SAM CLI for LocalStack
 
+> [!WARNING]
+> **`samlocal` is deprecated. Use `lstk sam` instead.**
+>
+> `samlocal` no longer receives updates.
+>
+> - Get started with `lstk`, the new LocalStack CLI: [docs.localstack.cloud/.../lstk](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/)
+> - Switch your scripts and CI workflows to `lstk sam`: [docs.localstack.cloud/.../lstk/migration](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/migration/#infrastructure-as-code)
+
 This project provides the `samlocal` command line, a simple wrapper around the [AWS SAM CLI](https://github.com/aws/aws-sam-cli) for use with [LocalStack](https://github.com/localstack/localstack).
 
 ## Installation
@@ -23,9 +31,11 @@ samlocal --help
 * `AWS_ENDPOINT_URL`: URL at which the `boto3` client can reach LocalStack, e.g. `http://localhost.localstack.cloud:4566` (default: `http://localhost:4566`)
 * `EDGE_PORT`: **Deprecated** Port number under which the LocalStack edge service is available (default: `4566`)
 * `LOCALSTACK_HOSTNAME`: **Deprecated** Host under which the LocalStack edge service is available (default: `localhost`)
+* `DISABLE_DEPRECATION_NOTICE`: Set to `1` to hide the deprecation notice
 
 ## Change Log
 
+* v1.71.0: Print a deprecation notice that points to `lstk sam`
 * v1.70.1: Fix ECR repository rewrite logic
 * v1.70.0: Fix regex pattern to detect ECR URLs with dashes
 * v1.69.0: Fix repo related cli options and add support to Lambdas with `Image` type

@@ -29,12 +29,42 @@ from samcli.cli import types
 ENV_ACCESS_KEY = 'AWS_ACCESS_KEY_ID'
 ENV_SECRET_KEY = 'AWS_SECRET_ACCESS_KEY'
 LOCALHOST_HOSTNAME = 'localhost.localstack.cloud'
+LSTK_DOCS_URL = 'https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/'
+LSTK_MIGRATION_URL = (
+    'https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/migration/#infrastructure-as-code')
 
 # configuration values
 EDGE_PORT = os.environ.get('EDGE_PORT') or 4566
 LOCALSTACK_HOSTNAME = os.environ.get('LOCALSTACK_HOSTNAME') or 'localhost'
 AWS_ENDPOINT_URL = os.environ.get("AWS_ENDPOINT_URL")
 LOCALSTACK_ENDPOINT = AWS_ENDPOINT_URL or f'http://{LOCALSTACK_HOSTNAME}:{EDGE_PORT}'
+
+
+def print_deprecation_notice():
+    """Point users to 'lstk sam'. Goes to stderr to keep stdout clean."""
+    if os.environ.get('DISABLE_DEPRECATION_NOTICE', '').lower().strip() in ('1', 'true'):
+        return
+
+    separator = '=' * 76
+    message = '\n'.join([
+        separator,
+        "  WARNING: 'samlocal' is deprecated. Use 'lstk sam' instead.",
+        separator,
+        '',
+        "  'samlocal' no longer receives updates.",
+        '',
+        "  Get started with 'lstk', the new LocalStack CLI:",
+        f'  {LSTK_DOCS_URL}',
+        '',
+        "  Switch your scripts and CI workflows to 'lstk sam':",
+        f'  {LSTK_MIGRATION_URL}',
+        '',
+        separator,
+        '',
+        "Continuing with 'samlocal'...",
+        '',
+    ])
+    print(message, file=sys.stderr, flush=True)
 
 
 def boto3_Session_client(*args, **kwargs):
@@ -120,4 +150,5 @@ do_export_orig = CloudFormationStackResource.do_export
 CloudFormationStackResource.do_export = do_export
 
 # start up main CLI procedure
+print_deprecation_notice()
 main.cli()
